@@ -7,16 +7,20 @@ app.use(express.static(__dirname + '/public'));
 
 state = {
     buzz: null,
-    team1:{
+    teams:[
+    {
+        name: "Team 1",
         score:0,
         users:0,
         clients: {}
     },
-    team2:{
+    {
+        name: "Team 2",
         score:0,
         users:0,
         clients: {}
     }
+    ]
 }
 
 io.on('connection', function(socket){
@@ -29,11 +33,11 @@ io.on('connection', function(socket){
 
     socket.on('join', function(){
         if(team == null){
-            if(state.team1.users<state.team2.users){
-                team = state.team1;
-            }else{
-                team = state.team2;
-            }
+            state.teams.forEach(function(choice){
+                if(team == null || choice.users < team.users)
+                    team = choice
+            });
+            console.log(team)
             team.clients[socket.id] = client;
             team.users += 1
             io.emit('state', state);
@@ -69,16 +73,6 @@ io.on('connection', function(socket){
     socket.emit("state", state);
 
     socket.emit("id", socket.id);
-
-    socket.on('team1name', function(name){
-        state.team1.name = name;
-        socket.emit(state);
-    })
-
-    socket.on('team2name', function(name){
-        state.team2.name = name;
-        socket.emit(state);
-    })
 });
 
 http.listen(80, function(){

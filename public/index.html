@@ -19,19 +19,11 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6">
-				<h1>Team 1</h1>
+			<div class="col-md-6" ng-repeat="team in state.teams">
+				<h1>{{team.name}}</h1>
 				<table class="table table-striped">
 					<tbody>
-						<tr ng-repeat="(id, user) in state.team1.clients" ng-class="{success:state.buzz==id}"><td>{{user.name}}</td></tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="col-md-6">
-				<h1>Team 2</h1>
-				<table class="table table-striped">
-					<tbody>
-						<tr ng-repeat="(id, user) in state.team2.clients" ng-class="{success:state.buzz==id}"><td>{{user.name}}</td></tr>
+						<tr ng-repeat="(id, user) in team.clients" ng-class="{success:state.buzz==id}"><td>{{user.name}}</td></tr>
 					</tbody>
 				</table>
 			</div>
