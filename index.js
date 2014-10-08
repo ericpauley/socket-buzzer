@@ -37,7 +37,6 @@ io.on('connection', function(socket){
                 if(team == null || choice.users < team.users)
                     team = choice
             });
-            console.log(team)
             team.clients[socket.id] = client;
             team.users += 1
             io.emit('state', state);
@@ -69,6 +68,11 @@ io.on('connection', function(socket){
             io.emit("state", state);
         }
     });
+
+    socket.on('score', function(data){
+        state.teams[data.team].score += data.score;
+        socket.emit('state', state);
+    })
 
     socket.emit("state", state);
 

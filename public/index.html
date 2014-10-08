@@ -20,7 +20,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-6" ng-repeat="team in state.teams">
-				<h1>{{team.name}}</h1>
+				<h1>{{team.name}}{{scores}}<button class="btn" ng-repeat="score_choice in scores" ng-click="score($parent.$index, score_choice)">{{score_choice}}</button> - {{team.score}}</h1>
 				<table class="table table-striped">
 					<tbody>
 						<tr ng-repeat="(id, user) in team.clients" ng-class="{success:state.buzz==id}"><td>{{user.name}}</td></tr>

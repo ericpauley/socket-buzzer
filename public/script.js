@@ -5,6 +5,7 @@ angular.module('buzzerApp', ['ngSanitize', 'ngAudio'])
     $scope.admin = ($location.$$path == "/admin")
     $scope.name = "User"
     $scope.socket = socket
+    $scope.scores = [4,10]
 
     $scope.$watch('name', function(newValue){
         socket.emit('name', newValue);
@@ -32,6 +33,10 @@ angular.module('buzzerApp', ['ngSanitize', 'ngAudio'])
 
     $scope.reset = function(){
         socket.emit('reset')
+    }
+
+    $scope.score = function(team, score){
+        socket.emit('score', {team:team, score: score})
     }
     
 });
