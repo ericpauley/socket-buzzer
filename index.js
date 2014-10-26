@@ -5,7 +5,7 @@ var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/public'));
 
-state = {
+var state = {
     buzz: null,
     teams:[
     {
@@ -21,24 +21,24 @@ state = {
         clients: {}
     }
     ]
-}
+};
 
 io.on('connection', function(socket){
 
     var client = {
         name: "User",
-    }
+    };
     var team = null;
 
 
     socket.on('join', function(){
-        if(team == null){
+        if(team === null){
             state.teams.forEach(function(choice){
-                if(team == null || choice.users < team.users)
-                    team = choice
+                if(team === null || choice.users < team.users)
+                    team = choice;
             });
             team.clients[socket.id] = client;
-            team.users += 1
+            team.users += 1;
             io.emit('state', state);
         }
     });
@@ -46,7 +46,7 @@ io.on('connection', function(socket){
     socket.on('name', function(name){
         client.name = name;
         io.emit('state', state);
-    })
+    });
 
     socket.on('buzz', function(){
         if(!state.buzz){
@@ -72,13 +72,13 @@ io.on('connection', function(socket){
     socket.on('score', function(data){
         state.teams[data.team].score += data.score;
         socket.emit('state', state);
-    })
+    });
 
     socket.emit("state", state);
 
     socket.emit("id", socket.id);
 });
 
-http.listen(80, function(){
+http.listen(process.env.PORT || 80, process.env.IP || null, function(){
     console.log('listening on *:80');
 });
