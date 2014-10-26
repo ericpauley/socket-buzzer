@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/node_modules/angular-hotkeys/build'));
 
 var state = {
     buzz: null,
@@ -27,6 +28,7 @@ io.on('connection', function(socket){
 
     var client = {
         name: "User",
+        focus: true
     };
     var team = null;
 
@@ -45,6 +47,11 @@ io.on('connection', function(socket){
 
     socket.on('name', function(name){
         client.name = name;
+        io.emit('state', state);
+    });
+    
+    socket.on('focus', function(focus){
+        client.focus = Boolean(focus.focus);
         io.emit('state', state);
     });
 
