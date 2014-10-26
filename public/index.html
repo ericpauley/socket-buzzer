@@ -9,7 +9,7 @@
 <body ng-app="buzzerApp">
 	<div class="container-fluid" ng-controller="BuzzerController" ng-show="state">
 		<div class="row">
-			<div class="col-md-6 col-md-offset-3"><input class="form-control" id="name" placeholder="Enter Name" ng-model="name"></div>
+			<div class="col-md-6 col-md-offset-3"><input class="form-control" id="name" placeholder="Enter Name" ng-model="form.name"></div>
 		</div>
 		<div class="row">
 			<div ng-if="!admin" class="col-md-6 col-md-offset-3">
@@ -20,11 +20,11 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6" ng-repeat="team in state.teams">
-				<h1>{{team.name}} <button class="btn" ng-if="admin" ng-repeat="score_choice in scores" ng-click="score($parent.$index, score_choice)">{{score_choice}}</button> - {{team.score}}</h1>
+			<div class="col-md-6" ng-repeat="(teamId, team) in state.teams">
+				<h1>{{team.name}} <button class="btn" ng-if="admin" ng-repeat="score_choice in scores" ng-click="score(teamId, score_choice)">{{score_choice}}</button> - {{team.score}}</h1>
 				<table class="table table-striped">
 					<tbody>
-						<tr ng-repeat="(id, user) in team.clients" ng-class="{danger:!user.focus&&(state.buzz!=id),success:state.buzz==id}"><td>{{user.name}}</td></tr>
+						<tr ng-repeat="(id, user) in state.clients" ng-if="user.team == teamId" ng-class="{danger:!user.focus&&(state.buzz!=id),success:state.buzz==id}"><td>{{user.name}}</td></tr>
 					</tbody>
 				</table>
 			</div>

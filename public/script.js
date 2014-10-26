@@ -54,7 +54,7 @@ app.controller('BuzzerController', function($scope, $location, ngAudio, hotkeys)
 
     socket.on('connect', function() {
         if (!$scope.admin) {
-            socket.emit('join', {});
+            socket.emit('autojoin', {});
         }
     });
 
@@ -62,10 +62,25 @@ app.controller('BuzzerController', function($scope, $location, ngAudio, hotkeys)
         $scope.state = state;
         $scope.$apply();
     });
-
-    socket.on('id', function(id) {
-        $scope.id = id;
-        console.log($scope.id);
+    
+    socket.on('client', function(data){
+        console.log(data.client);
+        if(data.client === null){
+            delete $scope.state.clients[data.id];
+        }else{
+            $scope.state.clients[data.id] = data.client;
+        }
+        $scope.$apply();
+    });
+    
+    socket.on('buzz', function(data){
+        $scope.state.buzz = data.id;
+        $scope.$apply();
+    });
+    
+    socket.on('score', function(data){
+        $scope.state.teams[data.team].score = data.score;
+        $scope.$apply();
     });
 
     $scope.buzz = function() {
@@ -95,18 +110,12 @@ app.controller('BuzzerController', function($scope, $location, ngAudio, hotkeys)
 
     $scope.scorebuzzed = function(score, invert) {
         if ($scope.state.buzz) {
-            invert = invert || false;
-            angular.forEach($scope.state.teams, function(team, teamName) {
-                var good = false;
-                angular.forEach(team.clients, function(use, id) {
-                    if (id === $scope.state.buzz) {
-                        good = true;
-                    }
-                });
-                if (good != invert) {
-                    $scope.score(teamName, score);
+            var team = $scope.state.clients[$scope.state.buzz].team
+            for(var teamId in $scope.state.teams){
+                if((team == teamId && !invert) || (team != teamId && invert)){
+                    $scope.score(teamId, score);
                 }
-            })
+            }
         }
     };
 
