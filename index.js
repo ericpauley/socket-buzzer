@@ -12,11 +12,11 @@ function getId() {
     return idindex++;
 }
 
-function countClients(team){
+function countClients(team) {
     var count = 0;
-    for(var clientId in state.clients){
-        if(state.clients[clientId].team == team){
-            count ++;
+    for (var clientId in state.clients) {
+        if (state.clients[clientId].team == team) {
+            count++;
         }
     }
     return count;
@@ -49,6 +49,7 @@ io.on('connection', function(socket) {
     state.clients[socket.id] = client;
 
     socket.emit('state', state);
+    socket.emit('id', socket.id);
 
     socket.on('autojoin', function() {
         for (var teamId in state.teams) {
@@ -59,6 +60,26 @@ io.on('connection', function(socket) {
             id: socket.id,
             client: client
         });
+    });
+
+    socket.on('setteam', function(data) {
+        if (state.teams[data.team] && state.buzz != socket.id) {
+            client.team = data.team;
+            io.emit('client', {
+                id: socket.id,
+                client: client
+            });
+        }
+    });
+    
+    socket.on('teamname', function(data){
+        if (state.teams[data.team]) {
+            state.teams[data.team].name = data.name;
+            io.emit('teamname', {
+                team: data.team,
+                name:data.name,
+            });
+        }
     });
 
     socket.on('name', function(name) {
@@ -97,11 +118,12 @@ io.on('connection', function(socket) {
         if (client.team) {
             delete state.clients[socket.id];
             if (socket.id == state.buzz) {
+                state.buzz = null;
                 io.emit("buzz", {
-                    id: socket.id,
-                    client: null
+                    id: null,
                 });
             }
+            
             io.emit("client", {
                 id: socket.id,
                 client: null

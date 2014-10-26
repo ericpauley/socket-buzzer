@@ -1,30 +1,41 @@
 <!doctype html>
 <html>
+
 <head>
 	<title>Socket.IO buzzer</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/hotkeys.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
+
 <body ng-app="buzzerApp">
 	<div class="container-fluid" ng-controller="BuzzerController" ng-show="state">
 		<div class="row">
-			<div class="col-md-6 col-md-offset-3"><input class="form-control" id="name" placeholder="Enter Name" ng-model="form.name"></div>
+			<div class="col-md-6 col-md-offset-3">
+				<input class="form-control" id="name" placeholder="Enter Name" ng-model="form.name">
+			</div>
 		</div>
 		<div class="row">
 			<div ng-if="!admin" class="col-md-6 col-md-offset-3">
-				<button ng-disabled="state.buzz"type="button" class="btn btn-primary btn-lg btn-block" ng-class="{'btn-success':state.buzz==id}" ng-click="buzz()">Buzz</button>
+				<button ng-disabled="state.buzz" type="button" class="btn btn-primary btn-lg btn-block" ng-class="{'btn-success':state.buzz==id}" ng-click="buzz()">Buzz</button>
 			</div>
 			<div ng-if="admin" class="col-md-6 col-md-offset-3">
-				<button ng-disabled="!state.buzz"type="button" class="btn btn-lg btn-block" ng-class="{'btn-success':state.buzz}" ng-click="reset()">Reset</button>
+				<button ng-disabled="!state.buzz" type="button" class="btn btn-lg btn-block" ng-class="{'btn-success':state.buzz}" ng-click="reset()">Reset</button>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-6" ng-repeat="(teamId, team) in state.teams">
-				<h1>{{team.name}} <button class="btn" ng-if="admin" ng-repeat="score_choice in scores" ng-click="score(teamId, score_choice)">{{score_choice}}</button> - {{team.score}}</h1>
+				<h1><span ng-if="!admin">{{team.name}}</span><input ng-if="admin" ng-model="form.teams[teamId]"/>
+				<button class="btn" ng-if="admin" ng-repeat="score_choice in scores" ng-click="score(teamId, score_choice)">
+				{{score_choice}}</button> - {{team.score}}
+				<button class="btn" ng-if="!admin && state.clients[id].team != teamId && state.buzz != id" ng-click="setteam(teamId)">
+				join</button>
+				</h1>
 				<table class="table table-striped">
 					<tbody>
-						<tr ng-repeat="(id, user) in state.clients" ng-if="user.team == teamId" ng-class="{danger:!user.focus&&(state.buzz!=id),success:state.buzz==id}"><td>{{user.name}}</td></tr>
+						<tr ng-repeat="(id, user) in state.clients" ng-if="user.team == teamId" ng-class="{danger:!user.focus&&(state.buzz!=id),success:state.buzz==id}">
+							<td>{{user.name}}</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -38,4 +49,5 @@
 	<script src="/hotkeys.js"></script>
 	<script src="/script.js"></script>
 </body>
+
 </html>
