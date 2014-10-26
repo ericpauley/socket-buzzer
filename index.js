@@ -71,13 +71,13 @@ io.on('connection', function(socket) {
             });
         }
     });
-    
-    socket.on('teamname', function(data){
+
+    socket.on('teamname', function(data) {
         if (state.teams[data.team]) {
             state.teams[data.team].name = data.name;
             io.emit('teamname', {
                 team: data.team,
-                name:data.name,
+                name: data.name,
             });
         }
     });
@@ -123,7 +123,7 @@ io.on('connection', function(socket) {
                     id: null,
                 });
             }
-            
+
             io.emit("client", {
                 id: socket.id,
                 client: null

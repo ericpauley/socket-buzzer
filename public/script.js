@@ -53,7 +53,6 @@ app.controller('BuzzerController', function($scope, $location, ngAudio, hotkeys)
                     $scope.form.teams[teamId] = teams[teamId].name;
                 }
             }
-            console.log($scope.form.teams)
         }, true);
         $scope.$watch('form.teams', function(teams) {
             for (var teamId in teams) {
@@ -108,7 +107,7 @@ app.controller('BuzzerController', function($scope, $location, ngAudio, hotkeys)
 
     socket.on('teamname', function(data) {
         $scope.state.teams[data.team].name = data.name;
-        $scope.$apply()
+        $scope.$apply();
     });
 
     $scope.buzz = function() {
