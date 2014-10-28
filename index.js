@@ -5,7 +5,9 @@ var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules/angular-hotkeys/build'));
-
+app.get('*', function(req, res){
+    res.sendFile(__dirname + '/public/index.html');
+});
 var idindex = 2;
 
 function getId() {
