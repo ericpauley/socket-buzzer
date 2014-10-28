@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <button ng-disabled="!state.buzz" type="button" class="btn btn-lg btn-block" ng-class="{'btn-success':state.buzz}" ng-click="reset()">Reset</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6" ng-repeat="(teamId, team) in state.teams">
+        <h1><input ng-model="form.teams[teamId]"/>
+				<button class="btn" ng-repeat="score_choice in scores" ng-click="score(teamId, score_choice)">
+				{{score_choice}}</button> - {{team.score}}
+				</h1>
+        <table class="table table-striped">
+            <tbody>
+                <tr ng-repeat="(id, user) in state.clients" ng-if="user.team == teamId" ng-class="{danger:!user.focus&&(state.buzz!=id),success:state.buzz==id}">
+                    <td>{{user.name}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
