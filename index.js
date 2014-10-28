@@ -50,6 +50,10 @@ io.on('connection', function(socket) {
 
     socket.emit('state', state);
     socket.emit('id', socket.id);
+    
+    socket.on('ping', function(){
+        socket.emit('ping');
+    });
 
     socket.on('autojoin', function() {
         for (var teamId in state.teams) {

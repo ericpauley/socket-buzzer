@@ -1,6 +1,22 @@
 var app = angular.module('buzzerApp', ['ngSanitize', 'ngAudio', 'cfp.hotkeys', 'ngRoute']);
 
-app.controller('BuzzerController', function($scope, $location) {
+app.controller('PingController', function($scope, $timeout){
+    $scope.socket = io();
+    $scope.lastPing = new Date().getTime();
+    $scope.ping = 0;
+    $scope.sendPing = function(){
+        $scope.lastPing = new Date().getTime();
+        $scope.socket.emit('ping');
+    };
+    $scope.socket.on('ping', function(){
+        $scope.ping = new Date().getTime()-$scope.lastPing;
+        $scope.$apply();
+        $timeout($scope.sendPing, 1000);
+    });
+    $scope.sendPing();
+});
+
+app.controller('BuzzerController', function($scope, $location, $controller) {
     $scope.socket = io();
 
     $scope.socket.on('id', function(id) {
