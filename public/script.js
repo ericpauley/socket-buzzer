@@ -62,10 +62,11 @@ app.controller('SpectateController', function($scope, $controller){
     $scope.admin = false;
 });
 
-app.controller('AdminController', function($scope, hotkeys, $controller) {
+app.controller('AdminController', function($scope, hotkeys, $controller, ngAudio) {
     $controller('BuzzerController', {
         $scope: $scope
     });
+    $scope.sound = ngAudio.load("beep.mp3");
     $scope.admin = true;
     $scope.form = {
         teams: {}
@@ -76,6 +77,12 @@ app.controller('AdminController', function($scope, hotkeys, $controller) {
         description: 'Reset Buzzer',
         callback: function() {
             $scope.reset();
+        }
+    });
+    $scope.socket.on('buzz', function(data) {
+        if(data.id != null){
+            console.log("test");
+            $scope.sound.play();
         }
     });
     angular.forEach($scope.scores, function(score) {
