@@ -200,7 +200,7 @@ app.config(function($routeProvider, $locationProvider) {
         })
         .when('/quiz/spectate', {
             templateUrl: 'spectate.html',
-            controller: 'AdminController'
+            controller: 'SpectateController'
         })
         .otherwise({
             redirectTo: '/quiz'
